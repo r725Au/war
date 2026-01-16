@@ -37,13 +37,18 @@ class Player():
         
     
 class Game:
+    SUIT_NAMES = {
+            "s": "スペード",
+            "h": "ハート",
+            "d": "ダイヤ",
+            "c": "クラブ"
+        }
+
     def __init__(self, player_num):
         self.players_hand = []
         self.deck = Deck()
         self.players = [Player("Player{}".format(i+1)) for i in range(player_num)]
-
-
-    
+        
     def deal(self):
         per_card = 52 // len(self.players)
         for _ in range(per_card):
@@ -67,7 +72,15 @@ class Game:
         
         else :
             return int(number)
+        
+    def display_card(self, card):
+        suit = card[0]
+        number = card[1:]
+        return f"{self.SUIT_NAMES[suit]}の{number}"
+
+
     def rule(self):
+        print("戦争！")
         # 今回の勝負で出たカード（場札）
         table_cards = []
 
@@ -89,7 +102,8 @@ class Game:
                 value = self.strength(card)
                 player_card.append((player, value))
                 numbers.append(value)
-                print(f"{player.name} のカードは {card} です")
+                print(f"{player.name}のカードは{self.display_card(card)}です。")
+
 
             # 最大値を求める
             max_value = max(numbers)
@@ -103,7 +117,11 @@ class Game:
             # 勝者が1人なら終了
             if len(winners) == 1:
                 winner = winners[0]
-                print(f"勝者は {winner.name} です")
+                print(
+                    f"{winner.name}が勝ちました。"
+                    f"{winner.name}はカードを{len(table_cards)}枚もらいました。"
+                )
+
 
                 # 場札をすべて勝者の手札に加える
                 for card in table_cards:
@@ -147,16 +165,16 @@ class Game:
             print(f"{player.name}が{i}位です。")
     
     def start(self):
-        print("ゲーム開始")
+        print("戦争を開始します。")
         self.deal()
 
-        turn = 1
         while True:
             if self.is_game_over():
                 self.show_ranking()
+                print("戦争を終了します。")
                 break
             self.rule()
-            turn += 1
+
 
 
 
